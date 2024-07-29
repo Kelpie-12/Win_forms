@@ -1,10 +1,10 @@
-#include <Windows.h>
+п»ї#include <Windows.h>
 #include "resource.h"
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam);
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR ipCmdLine, INT nCmdShow)
 {
-	//MessageBox(NULL, "Hello World!\nСобщение", "Заголовок окна", MB_YESNOCANCEL| MB_ICONWARNING|MB_DEFBUTTON3);
+	//MessageBox(NULL, "Hello World!\nРЎРѕР±С‰РµРЅРёРµ", "Р—Р°РіРѕР»РѕРІРѕРє РѕРєРЅР°", MB_YESNOCANCEL| MB_ICONWARNING|MB_DEFBUTTON3);
 	DialogBox(hInstance, MAKEINTRESOURCE(IDD_DIALOG1), NULL, (DLGPROC)DlgProc, 0);
 	return 0;
 }
@@ -13,7 +13,7 @@ BOOL DlgProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_INITDIALOG://отрабатывает только один раз, при создание окна
+	case WM_INITDIALOG://РѕС‚СЂР°Р±Р°С‚С‹РІР°РµС‚ С‚РѕР»СЊРєРѕ РѕРґРёРЅ СЂР°Р·, РїСЂРё СЃРѕР·РґР°РЅРёРµ РѕРєРЅР°
 	{
 		HICON hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON1));
 		SendMessage(hwnd, WM_SETICON, 0, (LPARAM)hIcon);
@@ -23,7 +23,7 @@ BOOL DlgProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 		//SetFocus(GetDlgItem(hwnd, IDC_EDIT_Login));
 	}
 	break;
-	case WM_COMMAND://Обрабатываются нажатия на кнопки, ввод текста и любые изменения состояния окна
+	case WM_COMMAND://РћР±СЂР°Р±Р°С‚С‹РІР°СЋС‚СЃСЏ РЅР°Р¶Р°С‚РёСЏ РЅР° РєРЅРѕРїРєРё, РІРІРѕРґ С‚РµРєСЃС‚Р° Рё Р»СЋР±С‹Рµ РёР·РјРµРЅРµРЅРёСЏ СЃРѕСЃС‚РѕСЏРЅРёСЏ РѕРєРЅР°
 		switch (LOWORD(wParan))
 		{
 		case IDC_BUTTON_Copy:
@@ -37,7 +37,7 @@ BOOL DlgProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 		}
 		break;
 		case IDOK:
-			MessageBox(hwnd, "Была нажата ок", "Info", MB_OK | MB_ICONINFORMATION);
+			MessageBox(hwnd, "Р‘С‹Р»Р° РЅР°Р¶Р°С‚Р° РѕРє", "Info", MB_OK | MB_ICONINFORMATION);
 			break;
 		case IDCANCEL:
 			EndDialog(hwnd, 0);
@@ -46,7 +46,7 @@ BOOL DlgProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 			break;
 		}
 		break;
-	case WM_CLOSE://Обрабатываются при нажатие на кнопку Х (закрыть)
+	case WM_CLOSE://РћР±СЂР°Р±Р°С‚С‹РІР°СЋС‚СЃСЏ РїСЂРё РЅР°Р¶Р°С‚РёРµ РЅР° РєРЅРѕРїРєСѓ РҐ (Р·Р°РєСЂС‹С‚СЊ)
 		EndDialog(hwnd, 0);
 	default:
 		break;
