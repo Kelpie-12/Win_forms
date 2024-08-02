@@ -42,7 +42,7 @@ BOOL DlgProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 			break;
 		case IDC_EDIT_Login:
 		{
-			HWND hEdit = GetDlgItem(hwnd, IDC_EDIT_Login);
+			auto hEdit = GetDlgItem(hwnd, IDC_EDIT_Login);
 			CONST INT size = 256;
 			CHAR sz_buff[size]{};
 			SendMessage(hEdit, WM_GETTEXT, size, (LPARAM)sz_buff);
