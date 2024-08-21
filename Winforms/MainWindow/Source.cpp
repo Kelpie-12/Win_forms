@@ -265,7 +265,7 @@ void size_screen_now(HWND& hwnd)
 void set_cursor(HWND& hwnd, HCURSOR& hCursor)
 {
 	SetCursor(hCursor);
-	SetClassLongPtr(hwnd, GCLP_HCURSOR, (LONG_PTR)hCursor);
+	SetClassLongPtr(hwnd, GCLP_HCURSOR, (LONG_PTR)hCursor); 
 }
 
 std::string dir_way(HWND& hwnd)
