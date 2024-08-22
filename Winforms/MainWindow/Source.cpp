@@ -81,14 +81,14 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR ipCmdLine, IN
 	while (GetMessage(&msg, 0, 0, 0) > 0)
 	{
 		TranslateMessage(&msg);
-		DispatchMessage(&msg);		
+		DispatchMessage(&msg);
 	}
 
 }
 
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 {
-	
+
 	BOOL change_cursor = false;
 	switch (uMsg)
 	{
@@ -181,7 +181,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 
 		FindClose(hFile);
 	}
-	break;	
+	break;
 	case WM_COMMAND:
 	{
 		switch (LOWORD(wParan))
@@ -197,11 +197,11 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 			SendMessage(hStaticText, WM_SETTEXT, 0, (LPARAM)sz_buffer);
 
 #endif // Text_Element
-		
+
 			HCURSOR hC = LoadCursorFromFile((LPSTR)dir_way(hwnd).c_str());
 			set_cursor(hwnd, hC);
-			change_cursor = true;			
-		}		
+			change_cursor = true;
+		}
 		break;
 		default:
 			break;
@@ -210,13 +210,11 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 	break;
 	case WM_SETCURSOR:
 	{
-		
-			if (change_cursor==true)
-			{
-				HCURSOR hC = LoadCursorFromFile((LPSTR)dir_way(hwnd).c_str());
-				set_cursor(hwnd, hC);
-			}	
-		
+		if (change_cursor == true)
+		{
+			HCURSOR hC = LoadCursorFromFile((LPSTR)dir_way(hwnd).c_str());
+			set_cursor(hwnd, hC);
+		}
 		return TRUE;
 	}
 	break;
@@ -265,7 +263,7 @@ void size_screen_now(HWND& hwnd)
 void set_cursor(HWND& hwnd, HCURSOR& hCursor)
 {
 	SetCursor(hCursor);
-	SetClassLongPtr(hwnd, GCLP_HCURSOR, (LONG_PTR)hCursor); 
+	SetClassLongPtr(hwnd, GCLP_HCURSOR, (LONG_PTR)hCursor);
 }
 
 std::string dir_way(HWND& hwnd)
