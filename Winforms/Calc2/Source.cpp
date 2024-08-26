@@ -276,7 +276,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 		switch (LOWORD(wParan))
 		{
 		case VK_OEM_PERIOD:
-			Get_SM_Znak(hwnd, IDC_BUTTON_POINT);
+			Get_SM_Znak(hwnd, IDC_BUTTON_POINT);		
 			break;
 		case VK_OEM_PLUS: 
 			Get_SM_Znak(hwnd, IDC_BUTTON_PLUS);
