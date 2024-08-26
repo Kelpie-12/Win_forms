@@ -28,8 +28,7 @@ CONST INT g_i_START_X_CONTROL_BUTTONS = g_i_START_BUTTON_X + (g_i_BUTTON_SIZE + 
 void Get_Number_In_IDC_EDIT(HWND& hwnd, int number);
 std::string returt_res(std::string res);
 void Get_Znar_In_IDC_EDIT(HWND& hwnd, CHAR znak);
-int a(int d);
-
+void Get_SM_Znak(HWND&, int idc);
 
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam);
 
@@ -90,12 +89,9 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR ipCmdLine, IN
 	return 0;
 }
 std::string rezult;
-CHAR znak = '*';
-
 
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 {
-
 	switch (uMsg)
 	{
 	case WM_CREATE:
@@ -235,64 +231,19 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 			SendMessage(GetDlgItem(hwnd, IDC_EDIT_DISPLAY), WM_SETTEXT, 0, (LPARAM)buf.c_str());
 		}
 		break;
-
-		case IDC_BUTTON_PLUS:
-		{
-			CHAR sz_buf[256]{};
-			SendMessage(GetDlgItem(hwnd, IDC_EDIT_DISPLAY), WM_GETTEXT, 256, (LPARAM)sz_buf);
-			rezult += sz_buf;
-			if (rezult[rezult.size() - 1] == '.' || rezult[rezult.size() - 1] == '*' || rezult[rezult.size() - 1] == '+' || rezult[rezult.size() - 1] == '/' || rezult[rezult.size() - 1] == '-') {}
-			else
-			{
-				rezult += "+";
-				SendMessage(GetDlgItem(hwnd, IDC_EDIT_DISPLAY), WM_SETTEXT, 256, (LPARAM)rezult.c_str());
-			}
-			rezult = "";
-		}
+		case IDC_BUTTON_PLUS:		
+			Get_Znar_In_IDC_EDIT(hwnd, '+');			
+		
 		break;
-		case IDC_BUTTON_MINUS:
-		{
-			CHAR sz_buf[256]{};
-			SendMessage(GetDlgItem(hwnd, IDC_EDIT_DISPLAY), WM_GETTEXT, 256, (LPARAM)sz_buf);
-			rezult += sz_buf;
-			if (rezult[rezult.size() - 1] == '*' || rezult[rezult.size() - 1] == '+' || rezult[rezult.size() - 1] == '/' || rezult[rezult.size() - 1] == '-') {}
-			else
-			{
-				rezult += "-";
-				SendMessage(GetDlgItem(hwnd, IDC_EDIT_DISPLAY), WM_SETTEXT, 256, (LPARAM)rezult.c_str());
-			}
-			rezult = "";
-		}
-
+		case IDC_BUTTON_MINUS:		
+			Get_Znar_In_IDC_EDIT(hwnd, '-');
+		
 		break;
 		case IDC_BUTTON_ASTER:
-		{
-			CHAR sz_buf[256]{};
-			SendMessage(GetDlgItem(hwnd, IDC_EDIT_DISPLAY), WM_GETTEXT, 256, (LPARAM)sz_buf);
-			rezult += sz_buf;
-			if (rezult[rezult.size() - 1] == '*' || rezult[rezult.size() - 1] == '+' || rezult[rezult.size() - 1] == '/' || rezult[rezult.size() - 1] == '-') {}
-			else
-			{
-				rezult += "*";
-				SendMessage(GetDlgItem(hwnd, IDC_EDIT_DISPLAY), WM_SETTEXT, 256, (LPARAM)rezult.c_str());
-			}
-			rezult = "";
-		}
+			Get_Znar_In_IDC_EDIT(hwnd, '*');		
 		break;
-		case IDC_BUTTON_SLASH:
-		{
-			CHAR sz_buf[256]{};
-			SendMessage(GetDlgItem(hwnd, IDC_EDIT_DISPLAY), WM_GETTEXT, 256, (LPARAM)sz_buf);
-			rezult += sz_buf;
-			if (rezult[rezult.size() - 1] == '*' || rezult[rezult.size() - 1] == '+' || rezult[rezult.size() - 1] == '/' || rezult[rezult.size() - 1] == '-') {}
-			else
-			{
-				rezult += "/";
-				SendMessage(GetDlgItem(hwnd, IDC_EDIT_DISPLAY), WM_SETTEXT, 256, (LPARAM)rezult.c_str());
-			}
-			rezult = "";
-
-		}
+		case IDC_BUTTON_SLASH:		
+			Get_Znar_In_IDC_EDIT(hwnd, '/');		
 		break;
 		case IDC_BUTTON_EQUAL:
 		{
@@ -315,7 +266,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 			Sleep(75);
 			SendMessage(GetDlgItem(hwnd, LOWORD(wParan - 0x30 + IDC_BUTTON_0)), BM_SETSTATE, FALSE, 0);
 		}
-		if (LOWORD(wParan) >= 0x60 && LOWORD(wParan) <= 0x69)
+		if (LOWORD(wParan) >= 0x60 && LOWORD(wParan) <= 0x69)	
 		{
 			//SendMessage(hwnd, WM_COMMAND, LOWORD(wParan - 0x60 + IDC_BUTTON_0), 0);
 			SendMessage(GetDlgItem(hwnd, LOWORD(wParan - 0x60 + IDC_BUTTON_0)), BM_SETSTATE, TRUE, 0);
@@ -325,46 +276,25 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 		switch (LOWORD(wParan))
 		{
 		case VK_OEM_PERIOD:
-			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_POINT), 0);
-			SendMessage(GetDlgItem(hwnd, LOWORD(IDC_BUTTON_POINT)), BM_SETSTATE, TRUE, 0);
-			Sleep(75);
-			SendMessage(GetDlgItem(hwnd, LOWORD(IDC_BUTTON_POINT)), BM_SETSTATE, FALSE, 0);
+			Get_SM_Znak(hwnd, IDC_BUTTON_POINT);
 			break;
-		case VK_OEM_PLUS:
-			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_PLUS), 0);
-			SendMessage(GetDlgItem(hwnd, LOWORD(IDC_BUTTON_PLUS)), BM_SETSTATE, TRUE, 0);
-			Sleep(75);
-			SendMessage(GetDlgItem(hwnd, LOWORD(IDC_BUTTON_PLUS)), BM_SETSTATE, FALSE, 0);
+		case VK_OEM_PLUS: 
+			Get_SM_Znak(hwnd, IDC_BUTTON_PLUS);
 			break;
-		case VK_OEM_MINUS:
-			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_MINUS), 0);
-			SendMessage(GetDlgItem(hwnd, LOWORD(IDC_BUTTON_MINUS)), BM_SETSTATE, TRUE, 0);
-			Sleep(75);
-			SendMessage(GetDlgItem(hwnd, LOWORD(IDC_BUTTON_MINUS)), BM_SETSTATE, FALSE, 0);
+		case VK_OEM_MINUS:			
+			Get_SM_Znak(hwnd, IDC_BUTTON_MINUS);
 			break;
 		case VK_MULTIPLY:
-			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_ASTER), 0);
-			SendMessage(GetDlgItem(hwnd, LOWORD(IDC_BUTTON_ASTER)), BM_SETSTATE, TRUE, 0);
-			Sleep(75);
-			SendMessage(GetDlgItem(hwnd, LOWORD(IDC_BUTTON_ASTER)), BM_SETSTATE, FALSE, 0);
+			Get_SM_Znak(hwnd, IDC_BUTTON_ASTER);			
 			break;
 		case VK_DIVIDE:
-			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_SLASH), 0);
-			SendMessage(GetDlgItem(hwnd, LOWORD(IDC_BUTTON_SLASH)), BM_SETSTATE, TRUE, 0);
-			Sleep(75);
-			SendMessage(GetDlgItem(hwnd, LOWORD(IDC_BUTTON_SLASH)), BM_SETSTATE, FALSE, 0);
+			Get_SM_Znak(hwnd, IDC_BUTTON_SLASH);
 			break;
 		case VK_BACK:
-			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_BSP), 0);
-			SendMessage(GetDlgItem(hwnd, LOWORD(IDC_BUTTON_BSP)), BM_SETSTATE, TRUE, 0);
-			Sleep(75);
-			SendMessage(GetDlgItem(hwnd, LOWORD(IDC_BUTTON_BSP)), BM_SETSTATE, FALSE, 0);
+			Get_SM_Znak(hwnd, IDC_BUTTON_BSP);		
 			break;
 		case VK_ESCAPE:
-			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_CLEAR), 0);
-			SendMessage(GetDlgItem(hwnd, LOWORD(IDC_BUTTON_CLEAR)), BM_SETSTATE, TRUE, 0);
-			Sleep(75);
-			SendMessage(GetDlgItem(hwnd, LOWORD(IDC_BUTTON_CLEAR)), BM_SETSTATE, FALSE, 0);
+			Get_SM_Znak(hwnd, IDC_BUTTON_CLEAR);
 			break;
 		default:
 			break;
@@ -373,10 +303,8 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 	break;
 	case WM_KEYUP:
 	{
-		if (LOWORD(wParan) >= 0x30 && LOWORD(wParan) <= 0x39)
-		{
-			SendMessage(hwnd, WM_COMMAND, LOWORD(wParan - 0x30 + IDC_BUTTON_0), 0);
-		}
+		if (LOWORD(wParan) >= 0x30 && LOWORD(wParan) <= 0x39)		
+			SendMessage(hwnd, WM_COMMAND, LOWORD(wParan - 0x30 + IDC_BUTTON_0), 0);		
 		if (LOWORD(wParan) >= 0x60 && LOWORD(wParan) <= 0x69)
 			SendMessage(hwnd, WM_COMMAND, LOWORD(wParan - 0x60 + IDC_BUTTON_0), 0);
 	}
@@ -518,6 +446,23 @@ std::string returt_res(std::string res)
 
 void Get_Znar_In_IDC_EDIT(HWND& hwnd, CHAR znak)
 {
+	CHAR sz_buf[256]{};
+	SendMessage(GetDlgItem(hwnd, IDC_EDIT_DISPLAY), WM_GETTEXT, 256, (LPARAM)sz_buf);
+	rezult += sz_buf;
+	if (rezult[rezult.size() - 1] == '.' || rezult[rezult.size() - 1] == '*' || rezult[rezult.size() - 1] == '+' || rezult[rezult.size() - 1] == '/' || rezult[rezult.size() - 1] == '-') {}
+	else
+	{
+		rezult += znak;
+		SendMessage(GetDlgItem(hwnd, IDC_EDIT_DISPLAY), WM_SETTEXT, 256, (LPARAM)rezult.c_str());
+	}
+	rezult = "";
+}
 
+void Get_SM_Znak(HWND&hwnd, int idc)
+{
+	SendMessage(hwnd, WM_COMMAND, LOWORD(idc), 0);
+	SendMessage(GetDlgItem(hwnd, LOWORD(idc)), BM_SETSTATE, TRUE, 0);
+	Sleep(75);
+	SendMessage(GetDlgItem(hwnd, LOWORD(idc)), BM_SETSTATE, FALSE, 0);
 }
 
