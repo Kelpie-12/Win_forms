@@ -231,20 +231,10 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 			SendMessage(GetDlgItem(hwnd, IDC_EDIT_DISPLAY), WM_SETTEXT, 0, (LPARAM)buf.c_str());
 		}
 		break;
-		case IDC_BUTTON_PLUS:		
-			Get_Znar_In_IDC_EDIT(hwnd, '+');			
-		
-		break;
-		case IDC_BUTTON_MINUS:		
-			Get_Znar_In_IDC_EDIT(hwnd, '-');
-		
-		break;
-		case IDC_BUTTON_ASTER:
-			Get_Znar_In_IDC_EDIT(hwnd, '*');		
-		break;
-		case IDC_BUTTON_SLASH:		
-			Get_Znar_In_IDC_EDIT(hwnd, '/');		
-		break;
+		case IDC_BUTTON_PLUS: Get_Znar_In_IDC_EDIT(hwnd, '+'); break;
+		case IDC_BUTTON_MINUS: Get_Znar_In_IDC_EDIT(hwnd, '-'); break;
+		case IDC_BUTTON_ASTER: Get_Znar_In_IDC_EDIT(hwnd, '*'); break;
+		case IDC_BUTTON_SLASH: Get_Znar_In_IDC_EDIT(hwnd, '/'); break;
 		case IDC_BUTTON_EQUAL:
 		{
 			CHAR sz_buf[256]{};
@@ -259,14 +249,18 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 		break;
 	case WM_KEYDOWN:
 	{
-		if (LOWORD(wParan) >= 0x30 && LOWORD(wParan) <= 0x39)
+		if (GetKeyState(VK_SHIFT) < 0 && LOWORD(wParan) == 0X38)
+		{
+			Get_SM_Znak(hwnd, IDC_BUTTON_ASTER);
+		}
+		else if (LOWORD(wParan) >= 0x30 && LOWORD(wParan) <= 0x39)
 		{
 			//SendMessage(hwnd, WM_COMMAND, LOWORD(wParan - 0x30 + IDC_BUTTON_0), 0);
 			SendMessage(GetDlgItem(hwnd, LOWORD(wParan - 0x30 + IDC_BUTTON_0)), BM_SETSTATE, TRUE, 0);
 			Sleep(75);
 			SendMessage(GetDlgItem(hwnd, LOWORD(wParan - 0x30 + IDC_BUTTON_0)), BM_SETSTATE, FALSE, 0);
 		}
-		if (LOWORD(wParan) >= 0x60 && LOWORD(wParan) <= 0x69)	
+		else if (LOWORD(wParan) >= 0x60 && LOWORD(wParan) <= 0x69)
 		{
 			//SendMessage(hwnd, WM_COMMAND, LOWORD(wParan - 0x60 + IDC_BUTTON_0), 0);
 			SendMessage(GetDlgItem(hwnd, LOWORD(wParan - 0x60 + IDC_BUTTON_0)), BM_SETSTATE, TRUE, 0);
@@ -275,27 +269,18 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 		}
 		switch (LOWORD(wParan))
 		{
-		case VK_OEM_PERIOD:
-			Get_SM_Znak(hwnd, IDC_BUTTON_POINT);		
-			break;
-		case VK_OEM_PLUS: 
-			Get_SM_Znak(hwnd, IDC_BUTTON_PLUS);
-			break;
-		case VK_OEM_MINUS:			
-			Get_SM_Znak(hwnd, IDC_BUTTON_MINUS);
-			break;
-		case VK_MULTIPLY:
-			Get_SM_Znak(hwnd, IDC_BUTTON_ASTER);			
-			break;
-		case VK_DIVIDE:
-			Get_SM_Znak(hwnd, IDC_BUTTON_SLASH);
-			break;
-		case VK_BACK:
-			Get_SM_Znak(hwnd, IDC_BUTTON_BSP);		
-			break;
-		case VK_ESCAPE:
-			Get_SM_Znak(hwnd, IDC_BUTTON_CLEAR);
-			break;
+		case VK_DECIMAL:
+		case VK_OEM_PERIOD: Get_SM_Znak(hwnd, IDC_BUTTON_POINT); break;
+		case VK_ADD:
+		case VK_OEM_PLUS: Get_SM_Znak(hwnd, IDC_BUTTON_PLUS); break;
+		case VK_SUBTRACT:
+		case VK_OEM_MINUS: Get_SM_Znak(hwnd, IDC_BUTTON_MINUS); break;
+		case VK_MULTIPLY: Get_SM_Znak(hwnd, IDC_BUTTON_ASTER); break;
+		case VK_OEM_2:
+		case VK_DIVIDE:	Get_SM_Znak(hwnd, IDC_BUTTON_SLASH); break;
+		case VK_BACK: Get_SM_Znak(hwnd, IDC_BUTTON_BSP); break;
+		case VK_ESCAPE: Get_SM_Znak(hwnd, IDC_BUTTON_CLEAR); break;
+		case VK_RETURN:	Get_SM_Znak(hwnd, IDC_BUTTON_EQUAL); break;
 		default:
 			break;
 		}
@@ -303,9 +288,13 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 	break;
 	case WM_KEYUP:
 	{
-		if (LOWORD(wParan) >= 0x30 && LOWORD(wParan) <= 0x39)		
-			SendMessage(hwnd, WM_COMMAND, LOWORD(wParan - 0x30 + IDC_BUTTON_0), 0);		
-		if (LOWORD(wParan) >= 0x60 && LOWORD(wParan) <= 0x69)
+		if (GetKeyState(VK_SHIFT) < 0 && LOWORD(wParan) == 0X38)
+		{
+			Get_SM_Znak(hwnd, IDC_BUTTON_ASTER);
+		}
+		else	if (LOWORD(wParan) >= 0x30 && LOWORD(wParan) <= 0x39)
+			SendMessage(hwnd, WM_COMMAND, LOWORD(wParan - 0x30 + IDC_BUTTON_0), 0);
+		else if (LOWORD(wParan) >= 0x60 && LOWORD(wParan) <= 0x69)
 			SendMessage(hwnd, WM_COMMAND, LOWORD(wParan - 0x60 + IDC_BUTTON_0), 0);
 	}
 	break;
@@ -458,7 +447,7 @@ void Get_Znar_In_IDC_EDIT(HWND& hwnd, CHAR znak)
 	rezult = "";
 }
 
-void Get_SM_Znak(HWND&hwnd, int idc)
+void Get_SM_Znak(HWND& hwnd, int idc)
 {
 	SendMessage(hwnd, WM_COMMAND, LOWORD(idc), 0);
 	SendMessage(GetDlgItem(hwnd, LOWORD(idc)), BM_SETSTATE, TRUE, 0);
