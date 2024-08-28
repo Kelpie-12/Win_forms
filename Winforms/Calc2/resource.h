@@ -12,6 +12,10 @@
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
+#define CM_EXIT 200
+#define CM_SQUARE_BLUE 201
+#define CM_SQUARE_GREEN 202
+
 #define IDC_EDIT_DISPLAY 999
 
 #define IDC_BUTTON_0 1000
