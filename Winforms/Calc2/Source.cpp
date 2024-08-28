@@ -2,6 +2,8 @@
 #include "resource.h"
 #include <string>
 #include <vector>
+#include"SoftwerColors.h"
+#include<ctime>
 //https://github.com/microsoft/Windows-classic-samples
 CONST CHAR g_sz_WINDOW_CLASS[] = "Calc_PD_311";
 CONST INT g_i_START_Y = 10;
@@ -29,6 +31,7 @@ void Get_Number_In_IDC_EDIT(HWND& hwnd, int number);
 std::string returt_res(std::string res);
 void Get_Znar_In_IDC_EDIT(HWND& hwnd, CHAR znak);
 void Get_SM_Znak(HWND&, int idc);
+void Set_Icon_In_Button(HWND& hwnd);
 
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam);
 
@@ -85,8 +88,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR ipCmdLine, IN
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
-	}
-	return 0;
+	}	
+	return msg.wParam;
 }
 std::string rezult;
 
@@ -103,7 +106,13 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 			g_i_START_X, g_i_START_Y,
 			g_i_DISPLAY_WIDTH, g_i_DISPLAY_HEIGHT,
 			hwnd, (HMENU)IDC_EDIT_DISPLAY, NULL, NULL
-		);
+		);		
+		WinRect = 
+		{ 
+			g_i_START_X + g_i_WINDOW_HEIGHT ,
+			0,
+			0,
+			g_i_START_Y + g_i_WINDOW_WIDTH };
 
 		//---------------DIGTH---------------//
 		INT digit = 0;
@@ -116,7 +125,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 				CreateWindowEx
 				(
 					NULL, "Button", sz_digit,
-					WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+					WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON |  BS_BITMAP,
 					g_i_START_BUTTON_X + j * (g_i_BUTTON_SIZE + g_i_INTERVAL),
 					g_i_START_BUTTON_Y + i * (g_i_BUTTON_SIZE + g_i_INTERVAL),
 					g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
@@ -131,7 +140,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 		CreateWindowEx
 		(
 			NULL, "Button", "0",
-			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON |BS_BITMAP,
 			g_i_START_BUTTON_X, g_i_START_BUTTON_Y + (g_i_INTERVAL + g_i_BUTTON_SIZE) * 3,
 			g_i_BUTTON_BOUBLE_SIZE, g_i_BUTTON_SIZE,
 			hwnd,
@@ -141,7 +150,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 		CreateWindowEx
 		(
 			NULL, "Button", ".",
-			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON ,
 			g_i_START_BUTTON_X + g_i_BUTTON_BOUBLE_SIZE + g_i_INTERVAL, g_i_START_BUTTON_Y + (g_i_INTERVAL + g_i_BUTTON_SIZE) * 3,
 			g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,
 			hwnd,
@@ -197,10 +206,21 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 			NULL, NULL
 		);
 
+		Set_Icon_In_Button(hwnd);
+		RedrawWindow(hwnd,  NULL, NULL, RDW_UPDATENOW | RDW_INVALIDATE);
 	}
 	break;
+	case WM_PAINT:
+	{
+		std::srand(std::time(0));
+		BeginPaint(hwnd, &ps);
+		//FillRect(ps.hdc, &WinRect, CreateSolidBrush(RGB(10,250,10)));
+		//GradientRect(ps.hdc, &WinRect, Color(256, 0, 0), Color(0, 256, 0));
+		GradientRect(ps.hdc, &WinRect, Color(std::rand()%256, std::rand() % 256, std::rand() % 256), Color(std::rand() % 256, std::rand() % 256, std::rand() % 256), Color(std::rand() % 256, std::rand() % 256, std::rand() % 256), Color(std::rand() % 256, std::rand() % 256, std::rand() % 256));
+		EndPaint(hwnd, &ps);	
+	}
 	case WM_COMMAND:
-		SetFocus(hwnd);
+		SetFocus(hwnd);		
 		switch (LOWORD(wParan))
 		{
 		case IDC_BUTTON_0:
@@ -242,7 +262,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam)
 			std::string otvet = returt_res(sz_buf);
 			SendMessage(GetDlgItem(hwnd, IDC_EDIT_DISPLAY), WM_SETTEXT, 256, (LPARAM)otvet.c_str());
 		}
-		break;
+		break;	
 		default:
 			break;
 		}
@@ -453,5 +473,26 @@ void Get_SM_Znak(HWND& hwnd, int idc)
 	SendMessage(GetDlgItem(hwnd, LOWORD(idc)), BM_SETSTATE, TRUE, 0);
 	Sleep(75);
 	SendMessage(GetDlgItem(hwnd, LOWORD(idc)), BM_SETSTATE, FALSE, 0);
+}
+
+void Set_Icon_In_Button(HWND& hwnd)
+{
+	//"C:\\Users\\roman\\source\\repos\\Win_forms\\Winforms\\Calc2\\Number\\1.bmp"
+	for (size_t i = 0; i < 10; i++)
+	{
+		std::string path = "Number\\";
+		path += std::to_string(i);
+		path += ".bmp";
+		
+		HBITMAP hBitmap = (HBITMAP)LoadImage(NULL, path.c_str(), IMAGE_BITMAP, i == 0 ? g_i_BUTTON_BOUBLE_SIZE : g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,LR_CREATEDIBSECTION|LR_DEFAULTSIZE| LR_LOADFROMFILE);
+		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_0 + i), BM_SETIMAGE, (WPARAM)IMAGE_BITMAP,(LPARAM) hBitmap);
+		auto a = GetLastError();
+	}
+	//auto hButton = GetDlgItem(hwnd, IDC_BUTTON_1);
+	//HBITMAP hBitmap = (HBITMAP)LoadImage(NULL, "C:\\Users\\roman\\source\\repos\\Win_forms\\Winforms\\Calc2\\Number\\1.bmp"/* path.c_str()*/, IMAGE_BITMAP, g_i_BUTTON_SIZE, g_i_BUTTON_SIZE,  LR_LOADFROMFILE);
+	//auto b = GetLastError();
+	//SendMessage(hButton, BM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)hBitmap);
+	////SendMessage(hButton, BM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)hBitmap);
+	//auto a = GetLastError();
 }
 
