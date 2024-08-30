@@ -1,8 +1,9 @@
-п»ї#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #include <Windows.h>
 #include "resource.h"
 #include <string>
 #include <vector> 
+#include "Lib.h"
 
 
 
@@ -33,7 +34,7 @@ void Get_Number_In_IDC_EDIT(HWND& hwnd, int number);
 std::string returt_res(std::string res);
 void Get_Znar_In_IDC_EDIT(HWND& hwnd, CHAR znak);
 void Get_SM_Znak(HWND&, int idc);
-void SetSkin(HWND& hwnd, LPSTR skin);
+//void SetSkin(HWND& hwnd, LPSTR skin);
 void Get_Error(HWND& hwnd);
 
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam);
@@ -41,24 +42,6 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParan, LPARAM lParam);
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR ipCmdLine, INT nCmdShow)
 {
-//HINSTANCE hMyDLL = LoadLibraryW(L"C:\\Users\\roman\\source\\repos\\Win_forms\\Winforms\\x64\\Debug\\IconLib2.dll");
-
-	/*if (NULL == hMyDLL)	{ }
-	else
-	{
-		auto fnName = GetProcAddress(
-			hMyDLL,
-			"Initialise");
-		if (NULL == fnName)
-		{ }
-		else
-		{
-			
-		}
-		FreeLibrary(hMyDLL);
-	}*/
-
-
 	WNDCLASSEX wc;
 	ZeroMemory(&wc, sizeof(wc));
 	wc.style = 0;
@@ -73,7 +56,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR ipCmdLine, IN
 
 	wc.lpszClassName = g_sz_WINDOW_CLASS;
 	wc.lpszMenuName = NULL;
-	wc.lpfnWndProc = (WNDPROC)WndProc;//РЈРєР°Р·Р°С‚РµР»СЊ РЅР° РїСЂРѕС†РµРґСѓСЂСѓ РѕРєРЅР°
+	wc.lpfnWndProc = (WNDPROC)WndProc;//Указатель на процедуру окна
 	wc.hInstance = hInstance;
 
 	if (!RegisterClassEx(&wc))
@@ -545,26 +528,26 @@ void Get_SM_Znak(HWND& hwnd, int idc)
 	SendMessage(GetDlgItem(hwnd, LOWORD(idc)), BM_SETSTATE, FALSE, 0);
 }
 
-void SetSkin(HWND& hwnd, LPSTR skin)
-{
-	CHAR sz_file[MAX_PATH]{  };
-	for (int i = IDC_BUTTON_0; i <= IDC_BUTTON_9; i++)
-	{
-		HWND hButton = GetDlgItem(hwnd, i);
-		sprintf(sz_file, "ButtonBMP\\%s\\button_%i.bmp", skin, i - IDC_BUTTON_0);
-		HANDLE hImage = LoadImage
-		(
-			NULL,
-			sz_file,
-			IMAGE_BITMAP,
-			i == IDC_BUTTON_0 ? g_i_BUTTON_BOUBLE_SIZE : g_i_BUTTON_SIZE,
-			g_i_BUTTON_SIZE,
-			LR_LOADFROMFILE
-		);
-		SendMessage(hButton, BM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)hImage);
-
-	}
-}
+//void SetSkin(HWND& hwnd, LPSTR skin)
+//{
+//	CHAR sz_file[MAX_PATH]{  };
+//	for (int i = IDC_BUTTON_0; i <= IDC_BUTTON_9; i++)
+//	{
+//		HWND hButton = GetDlgItem(hwnd, i);
+//		sprintf(sz_file, "ButtonBMP\\%s\\button_%i.bmp", skin, i - IDC_BUTTON_0);
+//		HANDLE hImage = LoadImage
+//		(
+//			NULL,
+//			sz_file,
+//			IMAGE_BITMAP,
+//			i == IDC_BUTTON_0 ? g_i_BUTTON_BOUBLE_SIZE : g_i_BUTTON_SIZE,
+//			g_i_BUTTON_SIZE,
+//			LR_LOADFROMFILE
+//		);
+//		SendMessage(hButton, BM_SETIMAGE, (WPARAM)IMAGE_BITMAP, (LPARAM)hImage);
+//
+//	}
+//}
 
 void Get_Error(HWND& hwnd)
 {
