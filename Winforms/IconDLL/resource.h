@@ -12,7 +12,7 @@
 #define IDB_BITMAP7                     10007
 #define IDB_BITMAP8                     10008
 #define IDB_BITMAP9                     10009
-                   
+#define IDC_EDIT_DISPLAY 999            
 
 
 
